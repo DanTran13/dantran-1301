@@ -261,17 +261,20 @@ canvas.addEventListener('click', function(e){
 
 function drawSocialLinks() {
     const n = socialLinks.length;
-    const w = 160, h = 50, r = 21;
-    const spaceX = 32, spaceY = 26; // khoảng cách giữa các nút
-    const cols = 2; // mỗi hàng 2 nút
+    // Responsive: thu nhỏ trên mobile
+    let isMobile = canvas.width < 600;
+    const w = isMobile ? 100 : 160,
+          h = isMobile ? 38 : 50,
+          r = isMobile ? 13 : 21,
+          spaceX = isMobile ? 10 : 32,
+          spaceY = isMobile ? 10 : 26;
+    const cols = 2;
     const rows = 2;
-    // Tính tổng chiều rộng 2 nút + khoảng cách ở giữa (cho mỗi hàng)
     const totalWidth = cols * w + (cols - 1) * spaceX;
-    // Tính tổng chiều cao 2 hàng + khoảng cách giữa
     const totalHeight = rows * h + (rows - 1) * spaceY;
-    // Bắt đầu từ giữa màn hình, dịch lên phía trên chữ DAN TRAN một chút (tuỳ chỉnh)
+    // Vị trí lên cao tùy màn hình
+    const startY = isMobile ? canvas.height * 0.09 : canvas.height * 0.19 - totalHeight / 2;
     const startX = (canvas.width - totalWidth) / 2;
-    const startY = canvas.height * 0.19 - totalHeight / 2; // 0.32 là tuỳ chỉnh, thử để phù hợp
 
     for(let i=0; i<n; i++) {
         const row = Math.floor(i / cols);
@@ -286,8 +289,8 @@ function drawSocialLinks() {
         ctx.beginPath();
         roundRect(ctx, x, y, w, h, r);
         ctx.shadowColor = (i === hoverIndex) ? "#fff0fa" : "#ff41b3";
-        ctx.shadowBlur = (i === hoverIndex) ? 32 : 18;
-        ctx.lineWidth = (i === hoverIndex) ? 4.3 : 3.2;
+        ctx.shadowBlur = (i === hoverIndex) ? 22 : 16;
+        ctx.lineWidth = (i === hoverIndex) ? 3 : 2;
         ctx.strokeStyle = (i === hoverIndex) ? "#fff0fa" : "#ff41b3";
         ctx.stroke();
         ctx.restore();
@@ -303,20 +306,19 @@ function drawSocialLinks() {
 
         // Icon & text
         ctx.save();
-        ctx.font = "bold 28px Arial";
+        ctx.font = isMobile ? "bold 16px Arial" : "bold 28px Arial";
         ctx.textAlign = "left";
         ctx.textBaseline = "middle";
         ctx.globalAlpha = 0.97;
         ctx.shadowBlur = 0;
         ctx.fillStyle = "#fff";
-        ctx.fillText(socialLinks[i].icon, x + 21, y + h/2 + 1);
-        ctx.font = "19px Arial";
+        ctx.fillText(socialLinks[i].icon, x + (isMobile ? 12 : 21), y + h/2 + 1);
+        ctx.font = isMobile ? "12px Arial" : "19px Arial";
         ctx.fillStyle = "#ffe6fa";
-        ctx.fillText(socialLinks[i].name, x + 57, y + h/2 + 2);
+        ctx.fillText(socialLinks[i].name, x + (isMobile ? 30 : 57), y + h/2 + 2);
         ctx.restore();
     }
 }
-
 
 // Vẽ 1 nút
 function drawSocialButton(i, x, y, w, h, r) {
