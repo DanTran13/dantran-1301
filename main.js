@@ -261,59 +261,100 @@ canvas.addEventListener('click', function(e){
 
 function drawSocialLinks() {
     const n = socialLinks.length;
-    // Responsive: nhỏ hơn 600px thì thu nhỏ lại
-    let isMobile = window.innerWidth < 600;
-    const w = isMobile ? 68 : 160;
-    const h = isMobile ? 48 : 50;
-    const r = isMobile ? 13 : 21;
-    const space = isMobile ? 11 : 32;
-    const iconSize = isMobile ? 25 : 28;
-    const textSize = isMobile ? 0 : 19; // Ẩn chữ trên mobile, chỉ hiện icon
-    const totalWidth = n * w + (n-1)*space;
-    const startX = (canvas.width - totalWidth)/2;
-    const y = canvas.height - h - (isMobile ? 15 : 38);
+    const w = 160, h = 50, r = 21;
+    const spaceX = 32, spaceY = 26; // khoảng cách giữa các nút
+    const cols = 2; // mỗi hàng 2 nút
+    const rows = 2;
+    // Tính tổng chiều rộng 2 nút + khoảng cách ở giữa (cho mỗi hàng)
+    const totalWidth = cols * w + (cols - 1) * spaceX;
+    // Tính tổng chiều cao 2 hàng + khoảng cách giữa
+    const totalHeight = rows * h + (rows - 1) * spaceY;
+    // Bắt đầu từ giữa màn hình, dịch lên phía trên chữ DAN TRAN một chút (tuỳ chỉnh)
+    const startX = (canvas.width - totalWidth) / 2;
+    const startY = canvas.height * 0.19 - totalHeight / 2; // 0.32 là tuỳ chỉnh, thử để phù hợp
 
     for(let i=0; i<n; i++) {
-        let x = startX + i*(w+space);
+        const row = Math.floor(i / cols);
+        const col = i % cols;
+        let x = startX + col * (w + spaceX);
+        let y = startY + row * (h + spaceY);
+
         socialLinks[i]._rect = {x, y, w, h};
-        // Neon border
+
+        // Viền neon
         ctx.save();
         ctx.beginPath();
         roundRect(ctx, x, y, w, h, r);
         ctx.shadowColor = (i === hoverIndex) ? "#fff0fa" : "#ff41b3";
-        ctx.shadowBlur = (i === hoverIndex) ? 18 : 10;
-        ctx.lineWidth = (i === hoverIndex) ? 3.5 : 2.3;
+        ctx.shadowBlur = (i === hoverIndex) ? 32 : 18;
+        ctx.lineWidth = (i === hoverIndex) ? 4.3 : 3.2;
         ctx.strokeStyle = (i === hoverIndex) ? "#fff0fa" : "#ff41b3";
         ctx.stroke();
         ctx.restore();
 
-        // Background blur
+        // Nền trong mờ
         ctx.save();
-        ctx.globalAlpha = 0.92;
+        ctx.globalAlpha = 0.88;
         ctx.beginPath();
         roundRect(ctx, x, y, w, h, r);
         ctx.fillStyle = (i === hoverIndex) ? "#ff41b322" : "#161622bb";
         ctx.fill();
         ctx.restore();
 
-        // Icon & (optional) text
+        // Icon & text
         ctx.save();
-        ctx.font = `bold ${iconSize}px Arial`;
-        ctx.textAlign = "center";
+        ctx.font = "bold 28px Arial";
+        ctx.textAlign = "left";
         ctx.textBaseline = "middle";
-        ctx.globalAlpha = 0.99;
+        ctx.globalAlpha = 0.97;
         ctx.shadowBlur = 0;
         ctx.fillStyle = "#fff";
-        ctx.fillText(socialLinks[i].icon, x + w/2, y + h/2 + 1);
-        if(!isMobile) {
-            ctx.font = `${textSize}px Arial`;
-            ctx.fillStyle = "#ffe6fa";
-            ctx.textAlign = "left";
-            ctx.fillText(socialLinks[i].name, x + 57, y + h/2 + 2);
-        }
+        ctx.fillText(socialLinks[i].icon, x + 21, y + h/2 + 1);
+        ctx.font = "19px Arial";
+        ctx.fillStyle = "#ffe6fa";
+        ctx.fillText(socialLinks[i].name, x + 57, y + h/2 + 2);
         ctx.restore();
     }
 }
+
+
+// Vẽ 1 nút
+function drawSocialButton(i, x, y, w, h, r) {
+    // Viền neon
+    ctx.save();
+    ctx.beginPath();
+    roundRect(ctx, x, y, w, h, r);
+    ctx.shadowColor = (i === hoverIndex) ? "#fff0fa" : "#ff41b3";
+    ctx.shadowBlur = (i === hoverIndex) ? 28 : 13;
+    ctx.lineWidth = (i === hoverIndex) ? 4.2 : 3.1;
+    ctx.strokeStyle = (i === hoverIndex) ? "#fff0fa" : "#ff41b3";
+    ctx.stroke();
+    ctx.restore();
+
+    // Nền
+    ctx.save();
+    ctx.globalAlpha = 0.93;
+    ctx.beginPath();
+    roundRect(ctx, x, y, w, h, r);
+    ctx.fillStyle = (i === hoverIndex) ? "#ff41b322" : "#161622bb";
+    ctx.fill();
+    ctx.restore();
+
+    // Icon & text
+    ctx.save();
+    ctx.font = "bold 27px Arial";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    ctx.globalAlpha = 0.99;
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = "#fff";
+    ctx.fillText(socialLinks[i].icon, x + 19, y + h/2 + 1);
+    ctx.font = "17px Arial";
+    ctx.fillStyle = "#ffe6fa";
+    ctx.fillText(socialLinks[i].name, x + 49, y + h/2 + 2);
+    ctx.restore();
+}
+
 
 
 function roundRect(ctx, x, y, w, h, r) {
