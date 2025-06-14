@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>321 DAN TRAN</title>
+    <style>
+        html, body {
+            margin: 0; padding: 0;
+            overflow: hidden;
+            background: #000;
+            width: 100vw; height: 100vh;
+        }
+        body { width:100vw; height:100vh;}
+        #matrix {
+            display: block;
+            position: fixed;
+            left: 0; top: 0;
+            width: 100vw; height: 100vh;
+            z-index: 1;
+        }
+        audio { display: none; }
+    </style>
+</head>
+<body>
+    <!-- Nhạc, nhớ đặt file cover.mp3 cùng thư mục -->
+    <audio id="bgm" src="cover.mp3" preload="auto"></audio>
+    <canvas id="matrix"></canvas>
+    <script src="main.js"></script>
+</body>
+</html>
