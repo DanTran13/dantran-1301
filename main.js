@@ -261,56 +261,60 @@ canvas.addEventListener('click', function(e){
 
 function drawSocialLinks() {
     const n = socialLinks.length;
-    // Responsive: Giảm size trên màn hình nhỏ
-    let isMobile = canvas.width < 600;
-    const w = isMobile ? 94 : 160,
-          h = isMobile ? 36 : 50,
-          r = isMobile ? 13 : 21,
-          space = isMobile ? 14 : 32;
+    // Responsive: nhỏ hơn 600px thì thu nhỏ lại
+    let isMobile = window.innerWidth < 600;
+    const w = isMobile ? 68 : 160;
+    const h = isMobile ? 48 : 50;
+    const r = isMobile ? 13 : 21;
+    const space = isMobile ? 11 : 32;
+    const iconSize = isMobile ? 25 : 28;
+    const textSize = isMobile ? 0 : 19; // Ẩn chữ trên mobile, chỉ hiện icon
     const totalWidth = n * w + (n-1)*space;
     const startX = (canvas.width - totalWidth)/2;
-    const y = canvas.height - h - (isMobile ? 10 : 38);
+    const y = canvas.height - h - (isMobile ? 15 : 38);
 
     for(let i=0; i<n; i++) {
         let x = startX + i*(w+space);
-
         socialLinks[i]._rect = {x, y, w, h};
-        
         // Neon border
         ctx.save();
         ctx.beginPath();
         roundRect(ctx, x, y, w, h, r);
         ctx.shadowColor = (i === hoverIndex) ? "#fff0fa" : "#ff41b3";
-        ctx.shadowBlur = (i === hoverIndex) ? 32 : 18;
-        ctx.lineWidth = (i === hoverIndex) ? 3 : 2;
+        ctx.shadowBlur = (i === hoverIndex) ? 18 : 10;
+        ctx.lineWidth = (i === hoverIndex) ? 3.5 : 2.3;
         ctx.strokeStyle = (i === hoverIndex) ? "#fff0fa" : "#ff41b3";
         ctx.stroke();
         ctx.restore();
 
-        // Background
+        // Background blur
         ctx.save();
-        ctx.globalAlpha = 0.88;
+        ctx.globalAlpha = 0.92;
         ctx.beginPath();
         roundRect(ctx, x, y, w, h, r);
         ctx.fillStyle = (i === hoverIndex) ? "#ff41b322" : "#161622bb";
         ctx.fill();
         ctx.restore();
 
-        // Icon & text
+        // Icon & (optional) text
         ctx.save();
-        ctx.font = isMobile ? "bold 16px Arial" : "bold 28px Arial";
-        ctx.textAlign = "left";
+        ctx.font = `bold ${iconSize}px Arial`;
+        ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.globalAlpha = 0.97;
+        ctx.globalAlpha = 0.99;
         ctx.shadowBlur = 0;
         ctx.fillStyle = "#fff";
-        ctx.fillText(socialLinks[i].icon, x + (isMobile ? 11 : 21), y + h/2 + 1);
-        ctx.font = isMobile ? "12px Arial" : "19px Arial";
-        ctx.fillStyle = "#ffe6fa";
-        ctx.fillText(socialLinks[i].name, x + (isMobile ? 32 : 57), y + h/2 + 2);
+        ctx.fillText(socialLinks[i].icon, x + w/2, y + h/2 + 1);
+        if(!isMobile) {
+            ctx.font = `${textSize}px Arial`;
+            ctx.fillStyle = "#ffe6fa";
+            ctx.textAlign = "left";
+            ctx.fillText(socialLinks[i].name, x + 57, y + h/2 + 2);
+        }
         ctx.restore();
     }
 }
+
 
 function roundRect(ctx, x, y, w, h, r) {
     ctx.beginPath();
