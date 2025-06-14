@@ -261,29 +261,33 @@ canvas.addEventListener('click', function(e){
 
 function drawSocialLinks() {
     const n = socialLinks.length;
-    const w = 160, h = 50, r = 21;
-    const space = 32;
+    // Responsive: Giảm size trên màn hình nhỏ
+    let isMobile = canvas.width < 600;
+    const w = isMobile ? 94 : 160,
+          h = isMobile ? 36 : 50,
+          r = isMobile ? 13 : 21,
+          space = isMobile ? 14 : 32;
     const totalWidth = n * w + (n-1)*space;
     const startX = (canvas.width - totalWidth)/2;
-    const y = canvas.height - h - 38;
+    const y = canvas.height - h - (isMobile ? 10 : 38);
 
     for(let i=0; i<n; i++) {
         let x = startX + i*(w+space);
 
         socialLinks[i]._rect = {x, y, w, h};
         
-        // Vẽ viền neon hồng
+        // Neon border
         ctx.save();
         ctx.beginPath();
         roundRect(ctx, x, y, w, h, r);
         ctx.shadowColor = (i === hoverIndex) ? "#fff0fa" : "#ff41b3";
         ctx.shadowBlur = (i === hoverIndex) ? 32 : 18;
-        ctx.lineWidth = (i === hoverIndex) ? 4.3 : 3.2;
+        ctx.lineWidth = (i === hoverIndex) ? 3 : 2;
         ctx.strokeStyle = (i === hoverIndex) ? "#fff0fa" : "#ff41b3";
         ctx.stroke();
         ctx.restore();
 
-        // Nền trong mờ
+        // Background
         ctx.save();
         ctx.globalAlpha = 0.88;
         ctx.beginPath();
@@ -294,19 +298,20 @@ function drawSocialLinks() {
 
         // Icon & text
         ctx.save();
-        ctx.font = "bold 28px Arial";
+        ctx.font = isMobile ? "bold 16px Arial" : "bold 28px Arial";
         ctx.textAlign = "left";
         ctx.textBaseline = "middle";
         ctx.globalAlpha = 0.97;
         ctx.shadowBlur = 0;
         ctx.fillStyle = "#fff";
-        ctx.fillText(socialLinks[i].icon, x + 21, y + h/2 + 1);
-        ctx.font = "19px Arial";
+        ctx.fillText(socialLinks[i].icon, x + (isMobile ? 11 : 21), y + h/2 + 1);
+        ctx.font = isMobile ? "12px Arial" : "19px Arial";
         ctx.fillStyle = "#ffe6fa";
-        ctx.fillText(socialLinks[i].name, x + 57, y + h/2 + 2);
+        ctx.fillText(socialLinks[i].name, x + (isMobile ? 32 : 57), y + h/2 + 2);
         ctx.restore();
     }
 }
+
 function roundRect(ctx, x, y, w, h, r) {
     ctx.beginPath();
     ctx.moveTo(x+r, y);
